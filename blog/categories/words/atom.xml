@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Francesco Pischedda - My Octopress Blog]]></title>
-  <link href="http://fpischedda.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: words | Francesco Pischedda - My Octopress Blog]]></title>
+  <link href="http://fpischedda.github.com/blog/categories/words/atom.xml" rel="self"/>
   <link href="http://fpischedda.github.com/"/>
   <updated>2012-04-29T21:30:25+02:00</updated>
   <id>http://fpischedda.github.com/</id>
@@ -18,7 +18,7 @@
     <link href="http://fpischedda.github.com/blog/2012/04/29/this-post-exists-because-i-have-the-writers-stall/"/>
     <updated>2012-04-29T21:24:00+02:00</updated>
     <id>http://fpischedda.github.com/blog/2012/04/29/this-post-exists-because-i-have-the-writers-stall</id>
-    <content type="html"><![CDATA[<p>Cannot write a single line of code today&#8230;</p>
+    <content type="html"><![CDATA[<p>Cannot write a single line of code today...</p>
 ]]></content>
   </entry>
   
