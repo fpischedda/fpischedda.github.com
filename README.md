@@ -1,4 +1,4 @@
 fpischedda.github.com
 =====================
 
-blogging with github
+trying to blog with github
