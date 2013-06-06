@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Francesco Pischedda - My Octopress Blog</title>
+  <title>Minasss Projects Dump Blog</title>
   <meta name="author" content="Francesco Pischedda">
 
   
-  <meta name="description" content="Cannot write a single line of code today&#8230;
+  <meta name="description" content="
 ">
   
 
@@ -19,28 +19,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://fpischedda.github.com">
+  <link rel="canonical" href="http://html5dev.altervista.org//">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Francesco Pischedda - My Octopress Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Minasss Projects Dump Blog" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34515174-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Francesco Pischedda - My Octopress Blog</a></h1>
-  
-    <h2>A few thoughts that I can't keep for myself</h2>
-  
+<div class="wrapper">
+	<div class="left">
+		<h1><a href="/">Minasss Projects Dump Blog</a></h1>
+		
+		<h2>Polluting the web with my projects.</h2>
+		
+		<br/>
+	</div>
+	<div class="middle"></div>
+	<div class="right"><img src="/images/avatar.jpg" /></div>
+	<div class="clear"></div>
+</div>
+  <ul class="menu"> 
+	  <li><a href="/">blog</a></li>
+	  <li><a href="/books/">books</a></li>
+	  <li><a href="/projects/">projects</a></li>
+  </ul>
+
 </hgroup>
+
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -50,7 +77,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:fpischedda.github.com" />
+    <input type="hidden" name="q" value="site:html5dev.altervista.org/" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -71,7 +98,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/04/29/this-post-exists-because-i-have-the-writers-stall/">This Post Exists Because I Have &#8216;the Writers Stall&#8217;</a></h1>
+      <h1 class="entry-title"><a href="/posts/2013/03/03/real-time-web-applications-with-ajax-long-poll-plus-message-broker-equals-10k-concurrent-connections-made-easy/">Real Time Web Applications With Ajax: Long Poll + Message Broker = 10k Concurrent Connections Made Easy</a></h1>
     
     
       <p class="meta">
@@ -87,14 +114,396 @@
   
 
 
-<time datetime="2012-04-29T21:24:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2012</time>
+<time datetime="2013-03-03T00:28:00+01:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Cannot write a single line of code today&#8230;</p>
+  <div class="entry-content">
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/posts/2013/02/28/exploring-distributed-calculation-with-rabbitmq/">Exploring Distributed Calculation With RabbitMQ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-28T19:22:00+01:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>Preface</h1>
+
+<p>Lately I&#8217;ve had to work on a complex web application which have started to have
+an increased (and increasing) number of users. Unfortunately this web
+application was not built to scale easily and so problems started to get to the
+surface.
+When the user base was small to medium the load on the application server
+was fairly low and we could focus on adding new features and growing our
+user base until we landed on the Facebook platform. At some point users started
+to came and the scheduled task took 10-20-40-70-90 minutues to complete leaving
+the users to stare at the &#8220;calculating tasks&#8221; page.</p>
+
+<p>The first approved solution was to migrate our servers to AWS so we could
+increase host perfomance using bigger and bigger servers until we reached the
+limits of the single machines again.</p>
+
+<p>After a lot of battling with the management we had the opportunity to detach
+the application core from the web site and started to build the new
+architecture with these loosely defined requirements:</p>
+
+<ul>
+<li>better use of resources</li>
+<li>better code organization and quality</li>
+<li>horizontal scaling</li>
+<li>manageabilty</li>
+<li>ready for future development</li>
+</ul>
+
+
+<p>I admit that those where my requirements, but the management undestood that
+they have lost the ability to understand the architecture beyhond a simple web
+site with a bounch of scheduled routines that, honestly, worked with the help
+of an infinite dose of luck&#8230;and also my prototype run in a fraction of time.</p>
+
+<h1>Building blocks</h1>
+
+<p>Our old backend has been broken in to those pieces:</p>
+
+<ul>
+<li>libcore : the base code extracted from the old and stinky web site</li>
+<li><a href="http://www.rabbitmq.com">RabbitMQ</a> message broker</li>
+<li>job scheduler : send messages to appropriate exchanges at appropriate time</li>
+<li>workers : consume messages sent by the scheduler</li>
+</ul>
+
+
+<p>Leaving libcore apart doing its stuff lets focus on the scheduler and the
+workers; for details about RabbitMQ please refer to its <a href="http://www.rabbitmq.com">web site</a>.</p>
+
+<p>As a scheduling library I have choosen the open source
+<a href="http://quartznet.sourceforge.net/">Quartz.NET</a> which provided a simple but
+powerful interface to schedule jobs, I especially liked the ability to specify job
+triggers with the well known and compact cron syntax. Long story short the
+scheduled jobs harvests the tasks and send messages to exchanges accordingly.
+I think that the whole core plus the jobs are not bigger than some hundreds of
+lines of code. Wonderful!</p>
+
+<p>The workers simply have to inherit from a BaseConsumer class and override the
+consume method to do its tasks when a message is received. Done. Cool :)</p>
+
+<p>Given this simple architecture what are the benefits? Lets see:</p>
+
+<ul>
+<li>scaling: I simply have to add more workers in the same or different machines
+and the calculating power will increase accordingly</li>
+<li>flexibility: if a new task is required I have to create a new scheduled job
+and its consumer and maybe a new message type (messages are simple JSON
+described objects); after all is tested I have to update the scheduler and add a
+new worker either by updating a running worker or adding a new one without
+affecting the whole system; yes it can be done while the system is crunching
+its task and yes, obviously without affecting the web site(s)</li>
+<li>cost effective: if we have a lot of task to complete at a certain hour in the
+day I could simply turn on a couple of more machines when I need it and turn
+those off when the whole work is completed; if you have ever used the Amazon
+AWS infrastructure you understand of much one can save using this approach</li>
+<li>testing: having everything well separated I can test each block individually
+instead of having a code blob that is barely manageable</li>
+</ul>
+
+
+<p>With this short post I hope to increase interest in this simple way of doing
+distribuited computing using a message broker (whatever its is) and a simple
+but well architected system.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/posts/2013/02/03/trying-tdd/">Trying TDD (Test Driven Development)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-03T16:44:00+01:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In every software development studio where I&#8217;ve been employed I&#8217;ve tryed to
+add something to the development pipeline not only because I love the work I do
+but more often than desired these companies lacked something (they all would
+have scored a -12 on <a href="http://www.joelonsoftware.com/articles/fog0000000043.html">Joel Spolsky check
+list</a>).</p>
+
+<p>Some times I&#8217;ve had a plain victory some other times I&#8217;ve had to fight to even
+get the company to listen me. Obviously that was their fault&#8230;in my head!
+Surely I have done something wrong when I was trying to open their minds.
+There was a time when a particular client asked explicitly for the use of the
+MVC development pattern where internally the accepted solution was the
+copy-paste-pray approach. That same company have never growed because of this
+senseless approach to development but I didn&#8217;t care, I&#8217;ve moved along and my
+life gained a lot of quality points.
+In a next gig everything started smoother but I missed something and for
+example I was not able to convince them to use git, them an external contractor
+pretended the use of git on <a href="https://github.com/">github</a> and so git it was.</p>
+
+<p>I want to make a clear point, I don&#8217;t usually say &#8220;you have to use that
+tool/framework/service&#8221; because I want that and only that but because I think
+that it is the right tool for the job! And this fact drives me crazy because it
+seems that some people are unable to understand what&#8217;s best fer their own good!</p>
+
+<p>Oooook let&#8217;s put the rant apart&#8230;what was the post title again? Oh yeah, TDD!
+Well TDD fits perfectly in the pool of the &#8220;ignored suggestions&#8221; but this time
+it&#8217;s different because, even in my personal projects, I&#8217;ve never used this
+methodology seriously. So I&#8217;ve decided to add tests to my preferred pet project
+and I am VERY VERY satisfied! Maybe this time I&#8217;ll have arguments on my side
+when I&#8217;ll try to suggest TDD to someone.</p>
+
+<h2>Why have I adopted TDD?</h2>
+
+<p>Well, I&#8217;m developing <a href="https://github.com/fpischedda/lsystem">this little
+creature</a> that for a certain period of
+time were not receiving my attention, but fortunately I said to myself &#8220;what
+the hell I don&#8217;t even know what part of this thing works&#8221; so I started to add
+tests. I started to look at the code, there was something that had to be
+changed, something that had to be deleted and so on so I&#8217;ve started to pick one
+module at a time, reimagine the API and write tests or fix the code and write
+tests to document the API usage.</p>
+
+<p>Now that I&#8217;m doing a couple of commits a day, changing how things works,
+refactoring code etc etc I feel that my code is always in a stable state even if
+I don&#8217;t touch an old module for a week, I simply run the tests and see if/what
+something is broken and where is broken. Even for small projects like mine you
+can gain benefits imagine when building complex or big systems!</p>
+
+<h2>Benefits</h2>
+
+<p>I&#8217;ll try to list some of the benefits of this methodology:</p>
+
+<ul>
+<li>the code you write for the tests can be used as reference</li>
+<li>you know in what state your project is, what works and what don&#8217;t</li>
+<li>you know exactly where you code is broken</li>
+<li>you feel better when it is needed to do a major change to the code base</li>
+<li>if you are outsourcing some part of your project you can have an immediate
+taste of the quality of the code produced</li>
+</ul>
+
+
+<p>There are obviously other benefits but those are what that I&#8217;ve detected during
+my little experiment</p>
+
+<h2>Cons</h2>
+
+<ul>
+<li>you have to produce more code, but it&#8217;s a well payed effort</li>
+<li>you tell explicitly that you don&#8217;t trust your code :)</li>
+<li>you&#8217;ll find people that trust any code from anywhere that will lought in
+front of you&#8230;but then this people will spend nights fixing the system
+instead of caring about their loved ones :)</li>
+</ul>
+
+
+<h2>What to use</h2>
+
+<p>What to use as a base for your testing environment it&#8217;s up to you, your
+development platform, the language, the test framework etc&#8230;
+Personally I&#8217;m developing my project with python (>= 2.7.3) and I&#8217;m using
+<a href="http://pypi.python.org/pypi/nose/">nosetests</a>, no needs to inherit classes,
+just write functions with &#8220;test&#8221; in their names and they will be detected by
+the framework.</p>
+
+<h2>Conclusions</h2>
+
+<p>TDD is a tool that will help you write better code, once you want to test some
+piece of code it make you think how you can separate it in modules to help you
+write tests and you will get a more modular and trustworty code base. The nice
+thing is that anyone have to trust this words, just try it and see, it&#8217;s worth
+it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/posts/2013/01/08/my-new-portable-ide/">Vim: My New Portable IDE</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-08T17:44:00+01:00" pubdate data-updated="true">Jan 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Why</h2>
+
+<p>In the last six months I&#8217;ve felt the need to explore the command line ecosystem
+of development tools and I&#8217;ve inevitably started to learn (ehm, again)
+<a href="http://www.gnu.org/software/emacs/">Emacs</a> and then <a href="http://www.vim.org">Vim</a>,
+the latter have won the battle. I liked Emacs but I ended up using Vim, I think
+it&#8217;s just a matter of taste and I really don&#8217;t understand those famouse flame
+wars between the two user groups :)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/posts/2013/01/08/my-new-portable-ide/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/posts/2012/09/05/test-book-category/">Test Book Category</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-05T13:21:00+02:00" pubdate data-updated="true">Sep 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>this is a test post</h1>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/posts/2012/09/03/introducing-progress/">Introducing Progress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-03T16:15:00+02:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2><a href="http://html5dev.altervista.org/progress/" title="Progress app">Progress</a>, an activity tracking tool</h2>
+
+<p>Lately I’ve been playing with a bounch of tools/frameworks/libraries to work
+with the M-V-whatever design pattern for the javascript world plus I was evaluating
+tools/platforms like <a href="http://trigger.io" title="Trigger.io product page">trigger.io</a> and <a href="http://phonegap.com" title="PhoneGap project page">PhoneGap</a>
+to easily create a mobile application with said M-V things.</p>
+
+<p>The winner framework has been <a href="http://angularj.org" title="AngularJS project page">AngularJS</a>
+so I’ve started to build a little tracking tool called <a href="http://html5dev.altervista.org/progress/index.html" title="Progress app">Progress</a>.
+The main goal is to give to the user a tool to quickly track activities and then review
+the progresses made to a given project.</p>
+
+<p>At first I wanted to host the user data on users’ browser WebStorage or  <a href="http://www.w3schools.com/html5/html5_webstorage.asp" title="W3CSchools take on WebStorage">“localStorage”</a>, share her/his
+experience with other users and eventually store her/his whole data on a server
+(I’m thinking that this should be a paid service just to help with hosting costs).</p>
+
+<p>At this stage the user can create projects and track activity on them.
+The next thing I’d like to add is the ability to review a project’s activity
+using a simple graph and share this graph in some social network.</p>
 </div>
   
   
@@ -115,14 +524,84 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/04/29/this-post-exists-because-i-have-the-writers-stall/">This post exists because I have &#8216;the writers stall&#8217;</a>
+        <a href="/posts/2013/03/03/real-time-web-applications-with-ajax-long-poll-plus-message-broker-equals-10k-concurrent-connections-made-easy/">Real time web applications with ajax: long poll + message broker = 10k concurrent connections made easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/posts/2013/02/28/exploring-distributed-calculation-with-rabbitmq/">Exploring distributed calculation with RabbitMQ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/posts/2013/02/03/trying-tdd/">Trying TDD (Test Driven Development)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/posts/2013/01/08/my-new-portable-ide/">Vim: My new portable IDE</a>
+      </li>
+    
+      <li class="post">
+        <a href="/posts/2012/09/05/test-book-category/">test book category</a>
       </li>
     
   </ul>
 </section>
 
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/fpischedda">@fpischedda</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'fpischedda',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
 
 
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("focaskater", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/focaskater" class="twitter-follow-button" data-show-count="false">Follow @focaskater</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/francesco.pischedda@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -131,15 +610,40 @@
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Francesco Pischedda -
+  <footer role="contentinfo">
+    <p>
+  Copyright &copy; 2013 - Francesco Pischedda -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</footer>
+
+    <a href="http://www.fsf.org/register_form?referrer=11704"><img src="http://static.fsf.org/nosvn/associate/fsf-11704.png" alt="[FSF Associate Member]" /></a>
+  </footer>
   
 
+<script type="text/javascript">
+      var disqus_shortname = 'html5-minasss';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 
 

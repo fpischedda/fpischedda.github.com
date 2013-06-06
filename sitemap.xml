@@ -1,21 +1,47 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://html5dev.altervista.org//posts/2012/09/03/introducing-progress/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://html5dev.altervista.org//posts/2012/09/05/test-book-category/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://html5dev.altervista.org//posts/2013/01/08/my-new-portable-ide/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://html5dev.altervista.org//posts/2013/02/03/trying-tdd/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
         <loc>
-            http://fpischedda.github.com/blog/2012/04/29/this-post-exists-because-i-have-the-writers-stall/
+            http://html5dev.altervista.org//posts/2013/02/28/exploring-distributed-calculation-with-rabbitmq/
         </loc>
-        <lastmod>2012-04-29T21:28:19+02:00</lastmod>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
     </url>
     <url>
-        <loc>http://fpischedda.github.com/about-me/</loc>
-        <lastmod>2012-04-29T21:30:01+02:00</lastmod>
+        <loc>
+            http://html5dev.altervista.org//posts/2013/03/03/real-time-web-applications-with-ajax-long-poll-plus-message-broker-equals-10k-concurrent-connections-made-easy/
+        </loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
     </url>
     <url>
-        <loc>http://fpischedda.github.com/blog/archives/</loc>
-        <lastmod>2012-04-29T21:28:19+02:00</lastmod>
+        <loc>http://html5dev.altervista.org//blog/archives/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
     </url>
     <url>
-        <loc>http://fpischedda.github.com/</loc>
-        <lastmod>2012-04-29T21:28:19+02:00</lastmod>
+        <loc>http://html5dev.altervista.org//books/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://html5dev.altervista.org//</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://html5dev.altervista.org//projects/</loc>
+        <lastmod>2013-03-19T13:31:23+01:00</lastmod>
     </url>
 </urlset>
