@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: RabbitMQ | Minasss Projects Dump Blog]]></title>
+  <link href="http://html5dev.altervista.org//blog/categories/rabbitmq/atom.xml" rel="self"/>
+  <link href="http://html5dev.altervista.org//"/>
+  <updated>2013-03-21T15:34:48+01:00</updated>
+  <id>http://html5dev.altervista.org//</id>
+  <author>
+    <name><![CDATA[Francesco Pischedda]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exploring distributed calculation with RabbitMQ]]></title>
+    <link href="http://html5dev.altervista.org//posts/2013/02/28/exploring-distributed-calculation-with-rabbitmq/"/>
+    <updated>2013-02-28T19:22:00+01:00</updated>
+    <id>http://html5dev.altervista.org//posts/2013/02/28/exploring-distributed-calculation-with-rabbitmq</id>
+    <content type="html"><![CDATA[<h1>Preface</h1>
+
+<p>Lately I've had to work on a complex web application which have started to have
+an increased (and increasing) number of users. Unfortunately this web
+application was not built to scale easily and so problems started to get to the
+surface.
+When the user base was small to medium the load on the application server
+was fairly low and we could focus on adding new features and growing our
+user base until we landed on the Facebook platform. At some point users started
+to came and the scheduled task took 10-20-40-70-90 minutues to complete leaving
+the users to stare at the "calculating tasks" page.</p>
+
+<p>The first approved solution was to migrate our servers to AWS so we could
+increase host perfomance using bigger and bigger servers until we reached the
+limits of the single machines again.</p>
+
+<p>After a lot of battling with the management we had the opportunity to detach
+the application core from the web site and started to build the new
+architecture with these loosely defined requirements:</p>
+
+<ul>
+<li>better use of resources</li>
+<li>better code organization and quality</li>
+<li>horizontal scaling</li>
+<li>manageabilty</li>
+<li>ready for future development</li>
+</ul>
+
+
+<p>I admit that those where my requirements, but the management undestood that
+they have lost the ability to understand the architecture beyhond a simple web
+site with a bounch of scheduled routines that, honestly, worked with the help
+of an infinite dose of luck...and also my prototype run in a fraction of time.</p>
+
+<h1>Building blocks</h1>
+
+<p>Our old backend has been broken in to those pieces:</p>
+
+<ul>
+<li>libcore : the base code extracted from the old and stinky web site</li>
+<li><a href="http://www.rabbitmq.com">RabbitMQ</a> message broker</li>
+<li>job scheduler : send messages to appropriate exchanges at appropriate time</li>
+<li>workers : consume messages sent by the scheduler</li>
+</ul>
+
+
+<p>Leaving libcore apart doing its stuff lets focus on the scheduler and the
+workers; for details about RabbitMQ please refer to its <a href="http://www.rabbitmq.com">web site</a>.</p>
+
+<p>As a scheduling library I have choosen the open source
+<a href="http://quartznet.sourceforge.net/">Quartz.NET</a> which provided a simple but
+powerful interface to schedule jobs, I especially liked the ability to specify job
+triggers with the well known and compact cron syntax. Long story short the
+scheduled jobs harvests the tasks and send messages to exchanges accordingly.
+I think that the whole core plus the jobs are not bigger than some hundreds of
+lines of code. Wonderful!</p>
+
+<p>The workers simply have to inherit from a BaseConsumer class and override the
+consume method to do its tasks when a message is received. Done. Cool :)</p>
+
+<p>Given this simple architecture what are the benefits? Lets see:</p>
+
+<ul>
+<li>scaling: I simply have to add more workers in the same or different machines
+and the calculating power will increase accordingly</li>
+<li>flexibility: if a new task is required I have to create a new scheduled job
+and its consumer and maybe a new message type (messages are simple JSON
+described objects); after all is tested I have to update the scheduler and add a
+new worker either by updating a running worker or adding a new one without
+affecting the whole system; yes it can be done while the system is crunching
+its task and yes, obviously without affecting the web site(s)</li>
+<li>cost effective: if we have a lot of task to complete at a certain hour in the
+day I could simply turn on a couple of more machines when I need it and turn
+those off when the whole work is completed; if you have ever used the Amazon
+AWS infrastructure you understand of much one can save using this approach</li>
+<li>testing: having everything well separated I can test each block individually
+instead of having a code blob that is barely manageable</li>
+</ul>
+
+
+<p>With this short post I hope to increase interest in this simple way of doing
+distribuited computing using a message broker (whatever its is) and a simple
+but well architected system.</p>
+]]></content>
+  </entry>
+  
+</feed>

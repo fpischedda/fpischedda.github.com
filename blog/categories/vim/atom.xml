@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vim | Minasss Projects Dump Blog]]></title>
+  <link href="http://html5dev.altervista.org//blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://html5dev.altervista.org//"/>
+  <updated>2013-03-21T15:34:48+01:00</updated>
+  <id>http://html5dev.altervista.org//</id>
+  <author>
+    <name><![CDATA[Francesco Pischedda]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Vim: My new portable IDE]]></title>
+    <link href="http://html5dev.altervista.org//posts/2013/01/08/my-new-portable-ide/"/>
+    <updated>2013-01-08T17:44:00+01:00</updated>
+    <id>http://html5dev.altervista.org//posts/2013/01/08/my-new-portable-ide</id>
+    <content type="html"><![CDATA[<h2>Why</h2>
+
+<p>In the last six months I've felt the need to explore the command line ecosystem
+of development tools and I've inevitably started to learn (ehm, again)
+<a href="http://www.gnu.org/software/emacs/">Emacs</a> and then <a href="http://www.vim.org">Vim</a>,
+the latter have won the battle. I liked Emacs but I ended up using Vim, I think
+it's just a matter of taste and I really don't understand those famouse flame
+wars between the two user groups :)</p>
+
+<!-- more -->
+
+
+<p>After I've found my editor of choice I've had to start filling it with the best
+plugins for my development needs and thanks to this
+<a href="https://www.youtube.com/watch?v=YhqsjUUHj6g">video</a>
+now I have a very powerfull IDE that takes up little resources, is easily
+extendable with tons of plugins and you can really write at speed of thought!</p>
+
+<p>To get in the Vim philosofy doesn't take too much time, just start to hack some
+of your code, learn what keys you need to get that specific feature
+(autocompletition for example) and repeat until you feel confortable, I think
+that in a week or two one can became a Vim power user.</p>
+
+<p>In the title I've used the word "portable", why? And why is so important to me?
+Well, I think Vim is available for near every OS out there and that's a good
+thing by itself but adding the fact that you can have an exact replica of your
+preferred plugins and settings by simply copying around your .vim directory is,
+in my opinion, awesome! For example last week I've had the need to use Vim on a
+remote machine, at its first start it was the plain old Vim (Ubuntu 11.10
+stock version) but after an scp I felt like it was my local development
+machine.</p>
+
+<p>There is a lot to learn to become a Vim guru but fortunately there are lot of
+free resources out there to get you familiar with Vim, let me point out some:</p>
+
+<ul>
+<li>vim tutor: built in with vim, very useful tutorial to get started</li>
+<li>vim :help command</li>
+<li>this video <a href="https://www.youtube.com/watch?v=YhqsjUUHj6g">tutorial</a> on how to build
+vim from scratch with python support, also has some nice keybindings and Vim
+tips</li>
+<li><a href="http://vimcasts.org/">VimCasts</a>, a lot of useful material about Vim</li>
+<li>Google about Vim :)</li>
+</ul>
+
+
+<p>Even if not free (but very affordable) I strongly suggest the book
+<a href="http://pragprog.com/book/dnvim/practical-vim">Pratical Vim</a> by Drew Neil,
+the same author of the VimCasts web site.</p>
+
+<h2>Closing Considerations</h2>
+
+<p>Probably someone new to this topic will ask "why have I to learn a new set of
+key bindings or use the terminal with my new shiny and powerful computer
+when there are tons of good graphical IDEs with lots of buttons and menus?"</p>
+
+<p>My very personal answer is that when you learn all this new stuff you will
+probably be more and more productive or at least that's what happened to me.
+Again, it's a matter of taste, but it won't kill you if you give it a try,
+trust me :)</p>
+
+<p>I know that I'm far away from the status of Vim guru but learning is a fun
+process and while I'm doing it I'm also producing useful code so there is no
+waste here.</p>
+
+<p>Talking about learning I'm going to read this nice
+<a href="http://blog.sanctum.geek.nz/advanced-vim-registers/">article</a> about Vim's
+registers :)</p>
+
+<h2>Footnotes</h2>
+
+<p>This post has been written using Vim + <a href="https://github.com/hallison/vim-markdown">vim-markdown</a>
+plugin in a <a href="http://tmux.sourceforge.net/">tmux</a> session running Vim in one pane
+and <a href="http://octopress.org/">octopress</a> in the other.</p>
+]]></content>
+  </entry>
+  
+</feed>

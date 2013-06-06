@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: test | Minasss Projects Dump Blog]]></title>
+  <link href="http://html5dev.altervista.org//blog/categories/test/atom.xml" rel="self"/>
+  <link href="http://html5dev.altervista.org//"/>
+  <updated>2013-03-21T15:34:48+01:00</updated>
+  <id>http://html5dev.altervista.org//</id>
+  <author>
+    <name><![CDATA[Francesco Pischedda]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[test book category]]></title>
+    <link href="http://html5dev.altervista.org//posts/2012/09/05/test-book-category/"/>
+    <updated>2012-09-05T13:21:00+02:00</updated>
+    <id>http://html5dev.altervista.org//posts/2012/09/05/test-book-category</id>
+    <content type="html"><![CDATA[<h1>this is a test post</h1>
+]]></content>
+  </entry>
+  
+</feed>
