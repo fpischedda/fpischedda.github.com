@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>@FPSD (Posts about python cython c)</title><link>https://francesco.pischedda.info/</link><description></description><atom:link href="https://francesco.pischedda.info/categories/python-cython-c.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 15 Jul 2018 09:53:42 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Cython and C pointers</title><link>https://francesco.pischedda.info/posts/cython-and-c-pointers/</link><dc:creator>Francesco "fpsd" Pischedda</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://www.cython.org/"&gt;Cython&lt;/a&gt; is a powerful tool that can speed up your &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; code or can help you
+to quickly create an extension module for a library that has c bindings.&lt;/p&gt;
+&lt;p&gt;This post is not a cython tutorial but its about a problem I have encountered
+during the development of a wrapper to Wakaama LWM2M library; if you
+want to learn more about &lt;a class="reference external" href="http://www.cython.org/"&gt;Cython&lt;/a&gt; please refer to its &lt;a class="reference external" href="https://cython.readthedocs.io/en/latest/"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;During the development of said wrapper I have had a nasty strange bug affecting
+my code, at some point some object referenced by a pointer kept at the C library
+side seemed to change its value! For example think about this situation:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;you pass an object to a certain c function&lt;/li&gt;
+&lt;li&gt;the object's pointer is stored internally by the c library&lt;/li&gt;
+&lt;li&gt;you retrieve the object from the c library but its content its not the same...it's not even an instance of the same class!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To reproduce this behaviour please have a look at overwrite.py in my test &lt;a class="reference external" href="https://github.com/fpischedda/cython-post"&gt;project&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;At first I've been thinking about memory corruption caused by the C library code;
+this wrong assumption costed me at least two days of messing with gdb (that
+saved my life in another memory related bug) that have not given any useful
+insight.&lt;/p&gt;
+&lt;p&gt;I don't remember how I've spotted this problem but probably I should have tryed
+everything until something pointed me to the right direction.&lt;/p&gt;
+&lt;p&gt;What seems to happen here is something like this:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;create an object and assign it to a variable A&lt;/li&gt;
+&lt;li&gt;store its pointer in the C library&lt;/li&gt;
+&lt;li&gt;get back the pointer of the object; it will be the same object as referenced by A&lt;/li&gt;
+&lt;li&gt;assign a new object to A&lt;/li&gt;
+&lt;li&gt;create an object assign it to a variable B&lt;/li&gt;
+&lt;li&gt;get back the pointer of the object; it will NOT be the same object as
+referenced by A but it will be the one referenced by B&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;When the variable A is referencing the new object the old one is not referenced
+by anyone in the python world and its memory will became available to store the
+new object assigned to B and the pointer in the C world is now pointing to what
+is referenced by B.&lt;/p&gt;
+&lt;p&gt;It may seems obvious but when it happened to me it was inside a callback
+originating in the C code and being handled by a function defined in the
+cython context.&lt;/p&gt;
+&lt;div class="section" id="lesson-learned"&gt;
+&lt;h2&gt;Lesson learned&lt;/h2&gt;
+&lt;p&gt;When working with two different languages together
+nothing is naive especially when you are wrapping some code that you don't
+really know and that can bite your ass as soon as you think "what can go wrong?"&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>python cython c</category><guid>https://francesco.pischedda.info/posts/cython-and-c-pointers/</guid><pubDate>Fri, 06 Jan 2017 15:43:40 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Having fun with RabbitMQ | @FPSD</title>
+<link href="../../assets/css/bitter.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/main.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (it)" href="../../it/rss.xml">
+<link rel="canonical" href="https://francesco.pischedda.info/posts/having-fun-with-rabbitmq/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Francesco " fpsd pischedda>
+<meta property="og:site_name" content="@FPSD">
+<meta property="og:title" content="Having fun with RabbitMQ">
+<meta property="og:url" content="https://francesco.pischedda.info/posts/having-fun-with-rabbitmq/">
+<meta property="og:description" content="Preface
+Lately I’ve had to work on a complex web application which have started to have
+an increased (and increasing) number of users.
+Unfortunately this web application was not built to scale and so ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-02-28T21:13:45+01:00">
+<meta property="article:tag" content="rabbitmq scaling">
+<link rel="alternate" hreflang="it" href="../../it/posts/having-fun-with-rabbitmq/">
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="../../index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="../../archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="../../categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="../../rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="../../cv/index.html" title="CV"><i class="icon-user"></i></a></li>
+            <li><a href="https://github.com/fpischedda" title="My Github"><i class="icon-github"></i></a></li>
+            <li><a href="https://twitter.com/focaskater" title="Twitter"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://getnikola.com" title="Powered By Nikola"><i class=""></i></a></li>
+
+        </ul></section><section class="page-content"><div class="content" rel="main">
+            
+    <div class="post">
+    
+    <h1 class="p-name entry-title" itemprop="headline name">Having fun with RabbitMQ</h1>
+
+        <div class="meta">
+            <div class="authordate">
+                <time class="timeago" datetime="2013-02-28T21:13:45+01:00">2013-02-28 21:13</time>
+            
+
+            
+          |  
+        <a href="index.rst" id="sourcelink">Source</a>
+
+            </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="../../categories/rabbitmq-scaling/" rel="tag">rabbitmq scaling</a></li>
+        </ul>
+</div>
+
+        </div>
+        <div class="body">
+            <div>
+<div class="section" id="preface">
+<h2>Preface</h2>
+<p>Lately I’ve had to work on a complex web application which have started to have
+an increased (and increasing) number of users.
+Unfortunately this web application was not built to scale and so problems
+started to get to the surface.
+When the user base was small to medium the load on the application server was
+fairly low and we could focus on adding new features and growing our user base
+until we landed on the Facebook platform.
+At some point users started to came and the scheduled task took 10-20-40-70-90
+minutues to complete leaving the users to stare at the “calculating tasks” page.</p>
+<p>The first approved (the correct word should be "imposed") solution was to
+migrate our servers to AWS so we could increase host perfomance using bigger
+and bigger servers until we reached the limits of the single machine again.</p>
+<p>After a lot of battling with the management we had the opportunity to detach
+the application core from the web site and started to build the new architecture
+with these loosely defined requirements:</p>
+<ul class="simple">
+<li>better use of resources</li>
+<li>better code organization and quality</li>
+<li>horizontal scaling</li>
+<li>manageabilty</li>
+<li>ready for future development</li>
+</ul>
+<p>I admit that those where my requirements, but the management undestood that they
+have lost the ability to understand the architecture beyhond a simple web site
+with a bounch of scheduled routines that, honestly, worked with the help of an
+infinite dose of luck…and also my prototype run in a fraction of time.</p>
+</div>
+<div class="section" id="building-blocks">
+<h2>Building blocks</h2>
+<p>Our old backend has been broken in to those pieces:</p>
+<ul class="simple">
+<li>libcore : the base code extracted from the old and stinky web site</li>
+<li>RabbitMQ message broker</li>
+<li>job scheduler : send messages to appropriate exchanges at appropriate time</li>
+<li>workers : consume messages sent by the scheduler</li>
+</ul>
+<p>Leaving libcore apart doing its stuff lets focus on the scheduler and the
+workers; for details about RabbitMQ please refer to its web site
+(<a class="reference external" href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a>).</p>
+<p>As a scheduling library I have choosen the open source Quartz.NET
+(<a class="reference external" href="http://quartznet.sourceforge.net/">http://quartznet.sourceforge.net/</a>) which provided a simple but powerful
+interface to schedule jobs, I especially liked the ability to specify job
+triggers with the well known and compact cron syntax.
+Long story short the scheduled jobs harvests the tasks and send messages to
+exchanges accordingly.
+I think that the whole core plus the jobs are not bigger than some hundreds of
+lines of code. Wonderful!</p>
+<p>In order to create a worker one should simply have to inherit from a
+BaseConsumer class and override the "consume" method to do its tasks when a
+message is received. Done. Cool :)</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>Given this simple architecture what are the benefits? Lets see:</p>
+<ul class="simple">
+<li>scaling: I simply have to add more workers in the same or different machines and the calculating power will increase accordingly</li>
+<li>flexibility: if a new task is required I have to create a new scheduled job and its consumer (even in a different language or platform) and maybe a new message type (messages are simple JSON described objects); after all is tested I have to update the scheduler and add a new worker either by updating a running worker or adding a new one without affecting the whole system; yes it can be done while the system is crunching its task and yes, obviously without affecting the web site(s)</li>
+<li>cost effective: if we have a lot of task to complete at a certain hour in the day I could simply turn on a couple of more machines when I need it and turn those off when the whole work is completed; if you have ever used the Amazon AWS infrastructure you understand of much one can save using this approach</li>
+<li>testing: having everything well separated I can test each block individually instead of having a code blob that is barely manageable</li>
+</ul>
+<p>With this short post I hope to increase interest in this simple way of doing
+distribuited computing using a message broker and a simple but well architected
+system.</p>
+</div>
+</div>
+        </div>
+        
+        <ul class="pager hidden-print">
+<li class="next">
+                <a href="../using-buildbot-at-sysgrove/" rel="next" title="Using buildbot at SysGrove">Next post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="fpsd",
+            disqus_url="https://francesco.pischedda.info/posts/having-fun-with-rabbitmq/",
+        disqus_title="Having fun with RabbitMQ",
+        disqus_identifier="cache/posts/having-fun-with-rabbitmq.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        
+    
+
+
+    </div>
+
+        
+       <script>var disqus_shortname="fpsd";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2018         <a href="mailto:francesco@pischedda.info">Francesco "fpsd" Pischedda</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </section><script src="../../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="../../assets/js/jquery.timeago.js" type="text/javascript"></script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Logging model changes with SQLAlchemy listeners | @FPSD</title>
+<link href="../../assets/css/bitter.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/main.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (it)" href="../../it/rss.xml">
+<link rel="canonical" href="https://francesco.pischedda.info/posts/logging-model-changes-with-sqlalchemy-listeners/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Francesco " fpsd pischedda>
+<meta property="og:site_name" content="@FPSD">
+<meta property="og:title" content="Logging model changes with SQLAlchemy listeners">
+<meta property="og:url" content="https://francesco.pischedda.info/posts/logging-model-changes-with-sqlalchemy-listeners/">
+<meta property="og:description" content="Scenario
+Imagine you have a slew of models in your application, at some point you feel
+the need to log somewhere creation, modification or deletion of data belonging
+to these models.
+How to proceed wi">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-12-11T15:33:03+01:00">
+<meta property="article:tag" content="python sqlalchemy">
+<link rel="alternate" hreflang="it" href="../../it/posts/logging-model-changes-with-sqlalchemy-listeners/">
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="../../index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="../../archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="../../categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="../../rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="../../cv/index.html" title="CV"><i class="icon-user"></i></a></li>
+            <li><a href="https://github.com/fpischedda" title="My Github"><i class="icon-github"></i></a></li>
+            <li><a href="https://twitter.com/focaskater" title="Twitter"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://getnikola.com" title="Powered By Nikola"><i class=""></i></a></li>
+
+        </ul></section><section class="page-content"><div class="content" rel="main">
+            
+    <div class="post">
+    
+    <h1 class="p-name entry-title" itemprop="headline name">Logging model changes with SQLAlchemy listeners</h1>
+
+        <div class="meta">
+            <div class="authordate">
+                <time class="timeago" datetime="2013-12-11T15:33:03+01:00">2013-12-11 15:33</time>
+            
+
+            
+          |  
+        <a href="index.rst" id="sourcelink">Source</a>
+
+            </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="../../categories/python-sqlalchemy/" rel="tag">python sqlalchemy</a></li>
+        </ul>
+</div>
+
+        </div>
+        <div class="body">
+            <div>
+<div class="section" id="scenario">
+<h2>Scenario</h2>
+<p>Imagine you have a slew of models in your application, at some point you feel
+the need to log somewhere creation, modification or deletion of data belonging
+to these models.
+How to proceed without having to modify the classes one by one?</p>
+</div>
+<div class="section" id="what-s-on-sqlalchemy">
+<h2>What's on sqlalchemy</h2>
+<p>SQLAlchemy (<a class="reference external" href="http://sqlalchemy.org">http://sqlalchemy.org</a>) offers a couple of interesting mechanisms:
+the first concerns the possibility to hook to some event listeners such as
+before_insert, before_update, before_delete and the corresponding after_*.
+Additional help is provided by sqlalchemy the opportunity to work on a model
+after its definition by overriding the method __declare_last__.
+Using these facts, and assuming that you have defined a model named MyModel,
+if we wanted to intercept the event "after_insert" we could write the following
+code:</p>
+<pre class="code python"><a name="rest_code_62fb13b58f514080a136f507d09356fa-1"></a><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-2"></a><span class="c1">#lets pretend to have defined our model</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-3"></a>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-4"></a>  <span class="k">def</span> <span class="nf">after_insert</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-5"></a>    <span class="c1">#do some stuff</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-6"></a>    <span class="k">pass</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-7"></a>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-8"></a>  <span class="nd">@classmethod</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-9"></a>  <span class="k">def</span> <span class="nf">__declare_last__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<a name="rest_code_62fb13b58f514080a136f507d09356fa-10"></a>    <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="s2">"after_insert"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">after_insert</span><span class="p">)</span>
+</pre>
+<p>Whenever an object of class MyModel will be entered into the database
+after_insert method will be called , passing as parameters the mapping of the
+model, the connection and the target is none other than the object that has
+just been entered into the database.</p>
+<p>In the event that you are intercepting the creation or deletion of an object
+is sufficient to access its primary key to identify it in your log, but if we
+wanted to know which fields have been modified, with new and old values, as a
+result of an update it gets a little more complicated, but not too much.
+In fact sqlalchemy allows us, quite easily , to check the status of the fields
+of an object using the function sqlalchemy.orm.attributes.get_history (<a class="reference external" href="http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.get_history">http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.get_history</a>).
+This function is called for each field, it returns an object of type History (<a class="reference external" href="http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.History">http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.History</a>)
+which we will use the method has_changes() to check for changes, and if there were,
+getting the new and old values of the field that we are analyzing, for example:</p>
+<pre class="code python"><a name="rest_code_be135b7072b14169ac3742efa9b79bc0-1"></a><span class="n">h</span> <span class="o">=</span> <span class="n">get_history</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"a_field"</span><span class="p">)</span>
+<a name="rest_code_be135b7072b14169ac3742efa9b79bc0-2"></a><span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">has_changes</span><span class="p">():</span>
+<a name="rest_code_be135b7072b14169ac3742efa9b79bc0-3"></a>  <span class="c1">#do something using h.deleted list to get the old values</span>
+<a name="rest_code_be135b7072b14169ac3742efa9b79bc0-4"></a>  <span class="c1">#do something using h.added list to get the new values</span>
+</pre>
+</div>
+<div class="section" id="loggablemixin">
+<h2>LoggableMixin</h2>
+<p>Clearly to do this for all models of an application may be costly in terms of
+time and code maintenance (and extremely annoying) so you might think about
+creating a generic Mixin with which to extend the models of our application.
+Below is the skeleton for the implementation of the above mixin, omitting the
+details of where and how the logs are stored:</p>
+<pre class="code python"><a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-1"></a><span class="k">class</span> <span class="nc">LoggableMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-2"></a>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-3"></a>  <span class="k">def</span> <span class="nf">after_insert</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-4"></a>    <span class="c1">#do some stuff for the insert</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-5"></a>    <span class="k">pass</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-6"></a>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-7"></a>  <span class="k">def</span> <span class="nf">after_update</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-8"></a>    <span class="c1">#do some stuff for the update, maybe saving the changed fields values using get_history</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-9"></a>    <span class="k">pass</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-10"></a>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-11"></a>  <span class="k">def</span> <span class="nf">after_delete</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-12"></a>    <span class="c1">#do some stuff</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-13"></a>    <span class="k">pass</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-14"></a>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-15"></a>  <span class="nd">@classmethod</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-16"></a>  <span class="k">def</span> <span class="nf">__declare_last__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-17"></a>    <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="s2">"after_insert"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">after_insert</span><span class="p">)</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-18"></a>    <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="s2">"after_update"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">after_update</span><span class="p">)</span>
+<a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-19"></a>    <span class="n">event</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="s2">"after_delete"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">after_delete</span><span class="p">)</span>
+</pre>
+<p>so, for each model we want to log changes it will be sufficient to inherit from LoggableMixin:</p>
+<pre class="code python"><a name="rest_code_317c70dfa3144751b0f9f166da9b8a01-1"></a><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">SomeSuperClass</span><span class="p">,</span> <span class="n">LoggableMixin</span><span class="p">):</span>
+<a name="rest_code_317c70dfa3144751b0f9f166da9b8a01-2"></a>  <span class="k">pass</span>
+</pre>
+</div>
+<div class="section" id="improvements">
+<h2>Improvements</h2>
+<p>One of the first improvements you can make to the class LoggableMixin could be
+the separation of the class in three different classes eg . LogInsertMixin, LogUpdateMixin LogDeleteMixin,
+in my case I preferred to have it all together given the small size of the class.
+A second improvement would be the generalization of mixin allowing you to
+specify which functions (or methods) to be assigned to different listeners,
+and once more the specific needs of the application I'm working on does not
+require this level of abstraction and can live well with this approach.</p>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions</h2>
+<p>SQLAlchemy provides a number of services to work with the model, the system
+just described would not have been so easy to implement if it were not for the
+quality of the API of sqlalchemy.
+I invite anyone to go deeper in the documentation for sqlalchemy (<a class="reference external" href="http://docs.sqlalchemy.org">http://docs.sqlalchemy.org</a>)
+because within it are preserved gems of great value.
+For those wishing to see a concrete implementation of the topics discussed in
+this post they can take a look at the file sysgrove/models.py in the repository
+at <a class="reference external" href="https://bitbucket.org/sysgrove/sysgrove">https://bitbucket.org/sysgrove/sysgrove</a></p>
+</div>
+</div>
+        </div>
+        
+        <ul class="pager hidden-print">
+<li class="previous">
+                <a href="../our-qt-date-picker/" rel="prev" title="Our QT date picker">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../pyqt5-and-cx_freeze-windowstm-target-tips/" rel="next" title="PyQT5 and cx_Freeze Windows™ target tips">Next post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="fpsd",
+            disqus_url="https://francesco.pischedda.info/posts/logging-model-changes-with-sqlalchemy-listeners/",
+        disqus_title="Logging model changes with SQLAlchemy listeners",
+        disqus_identifier="cache/posts/logging-model-changes-with-sqlalchemy-listeners.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        
+    
+
+
+    </div>
+
+        
+       <script>var disqus_shortname="fpsd";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2018         <a href="mailto:francesco@pischedda.info">Francesco "fpsd" Pischedda</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </section><script src="../../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="../../assets/js/jquery.timeago.js" type="text/javascript"></script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>

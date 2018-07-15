@@ -1,0 +1,69 @@
+==================================================================
+https://keybase.io/fpischedda
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://francesco.pischedda.info
+  * I am fpischedda (https://keybase.io/fpischedda) on keybase.
+  * I have a public key with fingerprint AB96 944B 2108 1B09 8BCA  DA5D C959 4B1F B6F1 BDF2
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "01013a78cb3f7b9c3c2e65e9724ec49c310d4bb32e809b391150bb52eefa7558b4860a",
+            "fingerprint": "ab96944b21081b098bcada5dc9594b1fb6f1bdf2",
+            "host": "keybase.io",
+            "key_id": "c9594b1fb6f1bdf2",
+            "kid": "01013a78cb3f7b9c3c2e65e9724ec49c310d4bb32e809b391150bb52eefa7558b4860a",
+            "uid": "bcc159aebcd6d164e47d015be1b29419",
+            "username": "fpischedda"
+        },
+        "service": {
+            "hostname": "francesco.pischedda.info",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1473148445,
+    "expire_in": 157680000,
+    "prev": "2b848e0e5a6ba7fb7cb9fabe7865164ad755ab21079d25a219361ec507589cfc",
+    "seqno": 7,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.56
+Comment: https://keybase.io/crypto
+
+yMIrAnicrVJbSBVBGD6mlZpCF4pSepmELoru7Jm9nTSILj5lvYRExmFmdva4Ht09
+nl2PN/Q8dDPLQCG7UULUQwVCltE9rSBKKEpSiAoJA6mgEsvSbrOSPfXYvAz/z/d9
+//f9M/fSE32pCRvp44ctzdWfE/p6z1T5ih/FltYDYuu1IFAPwmzqYuU6c9xg2NRB
+AAhQgH6sqJT4DYVo1E9FJktMU0TEKOI1FHREiF9kqqARvwahJBAiiYwZWJEklSBV
+FjDIAYZphVg0EjUtl8tioskaQkSEggqJoKmEYh1LOtUkDRFoENmARDdETiy1HY/B
+zRHssFzT5j1eBKfs/QP/n31XTckRSqGkYUaoLutQRgwpugAlwiARNQQ1D+iwqIUr
+GEcbEdOhpUzXMWjIAbwfMynzVutlmcZEsUWZQ+3cv+Bc0zK8dJGo7drULueoUteN
+OAFPxa2NeLRqRoJ/BIPEtHS+Vc6Isahj2hYIQI6krulNgEjxQ6QiJOUAVhMxoyxo
+eghJkVWBH28Oi3FJkahIZQKTsEywYhCFEs3AhCmqLPGoWOf7wN5LKZouSliEml+G
+jEqCIqkaNSjwIlZaNggo3CYOcUnHDFnYrYoy0HCnpyTJl5DqmzVzhvfbfKkpc6f/
+4KWa2T/9R663jbU+l1PuT7we7Cebt6V1LytKurmzYHx803j2yqLDE4VliS9vJD6p
+KFk7KXxY0FiGukbPX9v85arwoyTefHxOcaw7b3TL4pIFrfbgz5a82y0nx+LJKTOu
+xIzkwVMNWaXryepXhcPHNvQu6TwbPjeR0p51dPhdwWel61v4oFI/vpedGgk1iG/z
+dg3VPF20/Dbaf+t9qzw00Jg22hQ8sHXNlYyOzpr8dfGWHbO/drU9r/ye23Ri4dVM
+sOrCwIM6MAKz1OzayUh1R1/jm3mTRvv2kRv7Ln5PDzeGwJ5nmfPjOYc+ue97VuTv
+Pj10Lq1woCPpo3M3/iIzI9g/+GusbvLyg98FSU/8
+=VonM
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/fpischedda
+
+==================================================================
+

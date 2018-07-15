@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>@FPSD (Articoli su python sqlalchemy)</title><link>https://francesco.pischedda.info/</link><description></description><atom:link href="https://francesco.pischedda.info/it/categories/python-sqlalchemy.xml" rel="self" type="application/rss+xml"></atom:link><language>it</language><lastBuildDate>Sun, 15 Jul 2018 09:53:42 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Logging model changes with SQLAlchemy listeners</title><link>https://francesco.pischedda.info/it/posts/logging-model-changes-with-sqlalchemy-listeners/</link><dc:creator>Francesco "fpsd" Pischedda</dc:creator><description>&lt;div&gt;&lt;div class="section" id="scenario"&gt;
+&lt;h2&gt;Scenario&lt;/h2&gt;
+&lt;p&gt;Imagine you have a slew of models in your application, at some point you feel
+the need to log somewhere creation, modification or deletion of data belonging
+to these models.
+How to proceed without having to modify the classes one by one?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="what-s-on-sqlalchemy"&gt;
+&lt;h2&gt;What's on sqlalchemy&lt;/h2&gt;
+&lt;p&gt;SQLAlchemy (&lt;a class="reference external" href="http://sqlalchemy.org"&gt;http://sqlalchemy.org&lt;/a&gt;) offers a couple of interesting mechanisms:
+the first concerns the possibility to hook to some event listeners such as
+before_insert, before_update, before_delete and the corresponding after_*.
+Additional help is provided by sqlalchemy the opportunity to work on a model
+after its definition by overriding the method __declare_last__.
+Using these facts, and assuming that you have defined a model named MyModel,
+if we wanted to intercept the event "after_insert" we could write the following
+code:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-2"&gt;&lt;/a&gt;&lt;span class="c1"&gt;#lets pretend to have defined our model&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-4"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;after_insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mapper&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;#do some stuff&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-8"&gt;&lt;/a&gt;  &lt;span class="nd"&gt;@classmethod&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-9"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__declare_last__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_62fb13b58f514080a136f507d09356fa-10"&gt;&lt;/a&gt;    &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"after_insert"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;after_insert&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Whenever an object of class MyModel will be entered into the database
+after_insert method will be called , passing as parameters the mapping of the
+model, the connection and the target is none other than the object that has
+just been entered into the database.&lt;/p&gt;
+&lt;p&gt;In the event that you are intercepting the creation or deletion of an object
+is sufficient to access its primary key to identify it in your log, but if we
+wanted to know which fields have been modified, with new and old values, as a
+result of an update it gets a little more complicated, but not too much.
+In fact sqlalchemy allows us, quite easily , to check the status of the fields
+of an object using the function sqlalchemy.orm.attributes.get_history (&lt;a class="reference external" href="http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.get_history"&gt;http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.get_history&lt;/a&gt;).
+This function is called for each field, it returns an object of type History (&lt;a class="reference external" href="http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.History"&gt;http://docs.sqlalchemy.org/en/latest/orm/session.html#sqlalchemy.orm.attributes.History&lt;/a&gt;)
+which we will use the method has_changes() to check for changes, and if there were,
+getting the new and old values of the field that we are analyzing, for example:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_be135b7072b14169ac3742efa9b79bc0-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_history&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"a_field"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_be135b7072b14169ac3742efa9b79bc0-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_changes&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+&lt;a name="rest_code_be135b7072b14169ac3742efa9b79bc0-3"&gt;&lt;/a&gt;  &lt;span class="c1"&gt;#do something using h.deleted list to get the old values&lt;/span&gt;
+&lt;a name="rest_code_be135b7072b14169ac3742efa9b79bc0-4"&gt;&lt;/a&gt;  &lt;span class="c1"&gt;#do something using h.added list to get the new values&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="loggablemixin"&gt;
+&lt;h2&gt;LoggableMixin&lt;/h2&gt;
+&lt;p&gt;Clearly to do this for all models of an application may be costly in terms of
+time and code maintenance (and extremely annoying) so you might think about
+creating a generic Mixin with which to extend the models of our application.
+Below is the skeleton for the implementation of the above mixin, omitting the
+details of where and how the logs are stored:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;LoggableMixin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-3"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;after_insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mapper&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;#do some stuff for the insert&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-7"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;after_update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mapper&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-8"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;#do some stuff for the update, maybe saving the changed fields values using get_history&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-11"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;after_delete&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mapper&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-12"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;#do some stuff&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-13"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-15"&gt;&lt;/a&gt;  &lt;span class="nd"&gt;@classmethod&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-16"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__declare_last__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-17"&gt;&lt;/a&gt;    &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"after_insert"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;after_insert&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-18"&gt;&lt;/a&gt;    &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"after_update"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;after_update&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_86e2ad396b3e43938b6b53115f8ecdb1-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cos&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"after_delete"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;after_delete&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;so, for each model we want to log changes it will be sufficient to inherit from LoggableMixin:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_317c70dfa3144751b0f9f166da9b8a01-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SomeSuperClass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LoggableMixin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_317c70dfa3144751b0f9f166da9b8a01-2"&gt;&lt;/a&gt;  &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="improvements"&gt;
+&lt;h2&gt;Improvements&lt;/h2&gt;
+&lt;p&gt;One of the first improvements you can make to the class LoggableMixin could be
+the separation of the class in three different classes eg . LogInsertMixin, LogUpdateMixin LogDeleteMixin,
+in my case I preferred to have it all together given the small size of the class.
+A second improvement would be the generalization of mixin allowing you to
+specify which functions (or methods) to be assigned to different listeners,
+and once more the specific needs of the application I'm working on does not
+require this level of abstraction and can live well with this approach.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusions"&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;SQLAlchemy provides a number of services to work with the model, the system
+just described would not have been so easy to implement if it were not for the
+quality of the API of sqlalchemy.
+I invite anyone to go deeper in the documentation for sqlalchemy (&lt;a class="reference external" href="http://docs.sqlalchemy.org"&gt;http://docs.sqlalchemy.org&lt;/a&gt;)
+because within it are preserved gems of great value.
+For those wishing to see a concrete implementation of the topics discussed in
+this post they can take a look at the file sysgrove/models.py in the repository
+at &lt;a class="reference external" href="https://bitbucket.org/sysgrove/sysgrove"&gt;https://bitbucket.org/sysgrove/sysgrove&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://francesco.pischedda.info/it/posts/logging-model-changes-with-sqlalchemy-listeners/</guid><pubDate>Wed, 11 Dec 2013 14:33:03 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Cython and C pointers | @FPSD</title>
+<link href="../../assets/css/bitter.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/main.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (it)" href="../../it/rss.xml">
+<link rel="canonical" href="https://francesco.pischedda.info/posts/cython-and-c-pointers/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Francesco " fpsd pischedda>
+<meta property="og:site_name" content="@FPSD">
+<meta property="og:title" content="Cython and C pointers">
+<meta property="og:url" content="https://francesco.pischedda.info/posts/cython-and-c-pointers/">
+<meta property="og:description" content="Cython is a powerful tool that can speed up your Python code or can help you
+to quickly create an extension module for a library that has c bindings.
+This post is not a cython tutorial but its about a">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-01-06T16:43:40+01:00">
+<meta property="article:tag" content="python cython c">
+<link rel="alternate" hreflang="it" href="../../it/posts/cython-and-c-pointers/">
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="../../index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="../../archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="../../categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="../../rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="../../cv/index.html" title="CV"><i class="icon-user"></i></a></li>
+            <li><a href="https://github.com/fpischedda" title="My Github"><i class="icon-github"></i></a></li>
+            <li><a href="https://twitter.com/focaskater" title="Twitter"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://getnikola.com" title="Powered By Nikola"><i class=""></i></a></li>
+
+        </ul></section><section class="page-content"><div class="content" rel="main">
+            
+    <div class="post">
+    
+    <h1 class="p-name entry-title" itemprop="headline name">Cython and C pointers</h1>
+
+        <div class="meta">
+            <div class="authordate">
+                <time class="timeago" datetime="2017-01-06T16:43:40+01:00">2017-01-06 16:43</time>
+            
+
+            
+          |  
+        <a href="index.rst" id="sourcelink">Source</a>
+
+            </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="../../categories/python-cython-c/" rel="tag">python cython c</a></li>
+        </ul>
+</div>
+
+        </div>
+        <div class="body">
+            <div>
+<p><a class="reference external" href="http://www.cython.org/">Cython</a> is a powerful tool that can speed up your <a class="reference external" href="https://www.python.org/">Python</a> code or can help you
+to quickly create an extension module for a library that has c bindings.</p>
+<p>This post is not a cython tutorial but its about a problem I have encountered
+during the development of a wrapper to Wakaama LWM2M library; if you
+want to learn more about <a class="reference external" href="http://www.cython.org/">Cython</a> please refer to its <a class="reference external" href="https://cython.readthedocs.io/en/latest/">documentation</a>.</p>
+<p>During the development of said wrapper I have had a nasty strange bug affecting
+my code, at some point some object referenced by a pointer kept at the C library
+side seemed to change its value! For example think about this situation:</p>
+<ul class="simple">
+<li>you pass an object to a certain c function</li>
+<li>the object's pointer is stored internally by the c library</li>
+<li>you retrieve the object from the c library but its content its not the same...it's not even an instance of the same class!</li>
+</ul>
+<p>To reproduce this behaviour please have a look at overwrite.py in my test <a class="reference external" href="https://github.com/fpischedda/cython-post">project</a>.</p>
+<p>At first I've been thinking about memory corruption caused by the C library code;
+this wrong assumption costed me at least two days of messing with gdb (that
+saved my life in another memory related bug) that have not given any useful
+insight.</p>
+<p>I don't remember how I've spotted this problem but probably I should have tryed
+everything until something pointed me to the right direction.</p>
+<p>What seems to happen here is something like this:</p>
+<ol class="arabic simple">
+<li>create an object and assign it to a variable A</li>
+<li>store its pointer in the C library</li>
+<li>get back the pointer of the object; it will be the same object as referenced by A</li>
+<li>assign a new object to A</li>
+<li>create an object assign it to a variable B</li>
+<li>get back the pointer of the object; it will NOT be the same object as
+referenced by A but it will be the one referenced by B</li>
+</ol>
+<p>When the variable A is referencing the new object the old one is not referenced
+by anyone in the python world and its memory will became available to store the
+new object assigned to B and the pointer in the C world is now pointing to what
+is referenced by B.</p>
+<p>It may seems obvious but when it happened to me it was inside a callback
+originating in the C code and being handled by a function defined in the
+cython context.</p>
+<div class="section" id="lesson-learned">
+<h2>Lesson learned</h2>
+<p>When working with two different languages together
+nothing is naive especially when you are wrapping some code that you don't
+really know and that can bite your ass as soon as you think "what can go wrong?"</p>
+</div>
+</div>
+        </div>
+        
+        <ul class="pager hidden-print">
+<li class="previous">
+                <a href="../the-joy-of-contributing-to-open-sourcefree-software/" rel="prev" title="The joy of contributing to open source/free software">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../routing-celery-task-for-simple-prioritization/" rel="next" title="Routing Celery task for simple prioritization">Next post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="fpsd",
+            disqus_url="https://francesco.pischedda.info/posts/cython-and-c-pointers/",
+        disqus_title="Cython and C pointers",
+        disqus_identifier="cache/posts/cython-and-c-pointers.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        
+    
+
+
+    </div>
+
+        
+       <script>var disqus_shortname="fpsd";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2018         <a href="mailto:francesco@pischedda.info">Francesco "fpsd" Pischedda</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    </section><script src="../../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="../../assets/js/jquery.timeago.js" type="text/javascript"></script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>

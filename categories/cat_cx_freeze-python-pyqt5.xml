@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>@FPSD (Posts about cx_Freeze Python PyQT5)</title><link>https://francesco.pischedda.info/</link><description></description><atom:link href="https://francesco.pischedda.info/categories/cat_cx_freeze-python-pyqt5.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 15 Jul 2018 09:53:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>cx_Freeze, again</title><link>https://francesco.pischedda.info/posts/cx_freeze_again/</link><dc:creator>Francesco "fpsd" Pischedda</dc:creator><description>&lt;div&gt;&lt;p&gt;It's been a long time since the last post and for sure I was not thiking about
+another post about cx_Freeze.
+I have spent this week end trying (and at the end  succeding) to build an
+update to an old software. For future memory I'll write briefly the steps needed
+to get a functional build without losing my mind.&lt;/p&gt;
+&lt;div class="section" id="brief-description-of-the-problem"&gt;
+&lt;h2&gt;Brief description of the problem&lt;/h2&gt;
+&lt;p&gt;The software is a desktop application used to upload email attachments to a
+web based data store; the application talk to the web app using a "RESTy" api,
+and fetches the file from a email address; the GUI is written with the beatiful
+PyQT5 (someone may prefere PySide) and usually this dependency is a pain to
+work with but I have to admit that the newer version installs gracefuly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="os-version-and-things-to-download"&gt;
+&lt;h2&gt;OS version and things to download&lt;/h2&gt;
+&lt;p&gt;The person using this software needs to run it from a Windows OS and at this time
+Windows 7 is the oldes worsion of the OS I want to support (no Vista, please)
+since addressing Windows 10 will produce an executable with no retro compatibily
+and Windows 8 have less installs than 7.&lt;/p&gt;
+&lt;p&gt;The first software needed to be dowloaded is obviusly the Python 3.5 interpreter
+and after its installation came the first surprise, it doesn't run because of
+some missing dlls; after some research I have downloaded the redistribuitable
+runtime and it started to work as expected.&lt;/p&gt;
+&lt;p&gt;After Python was ready I've had to install the pip utility which was not
+automatically installed, maybe I have forgotten to chek the corresponding
+option in the installer; anyway everything installed correctly using it, this is
+a brief list of dependencies:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;requests: OK&lt;/li&gt;
+&lt;li&gt;paramiko: OK&lt;/li&gt;
+&lt;li&gt;imapclient: OK&lt;/li&gt;
+&lt;li&gt;PyQT: (surprisingly!) OK&lt;/li&gt;
+&lt;li&gt;cx_Freeze: Not ok at all..&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;cx_Freeze requires Widonws build tools that can freely (as in beer) downloaded
+and installed but even after that I was not able to install it from pip;
+fortunately some kind people provided a procompiled wheel for it but be sure
+to download the 5.0 version because the 4.x was not able to produce a proper
+executable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="additional-dependencies-and-some-setup-py-notes"&gt;
+&lt;h2&gt;Additional dependencies and some setup.py notes&lt;/h2&gt;
+&lt;p&gt;Having not touched I tought that the setup script was soemwhat correct since
+the last build was succesful, nothing more far from the truth; the first thing
+has been a nice surprise, cx_Freeze recognized correctly all the dlls to use in
+the final package and referencing additional dlls is not needed anymore, good
+work cx_Freeze guys!&lt;/p&gt;
+&lt;p&gt;After the first build ihave started a cycle of try, fix retry until the
+application could as expected, here is a list of additional dependencis that I
+had to install and reference in the setup.py file:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;appdir&lt;/li&gt;
+&lt;li&gt;packaging&lt;/li&gt;
+&lt;li&gt;atexit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;appdir and atexit only need to be referenced as packages instead packaging
+requires some more fine tuining so I had to add this additional sub_packages
+to the includes settings of the build_exe_options dictionary:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;packaging.version&lt;/li&gt;
+&lt;li&gt;packaging.specifiers&lt;/li&gt;
+&lt;li&gt;packaging.requirements&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="final-words"&gt;
+&lt;h2&gt;Final words&lt;/h2&gt;
+&lt;p&gt;It took me a couple of hours of trial/error to be able to ship the build and I
+hope to not have to repeat this madness again soon; if I'll need to create a new
+build in the future I hope that this little post will halp me not to waste my
+time again.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>cx_Freeze Python PyQT Windows</category><guid>https://francesco.pischedda.info/posts/cx_freeze_again/</guid><pubDate>Sun, 13 Nov 2016 20:45:17 GMT</pubDate></item></channel></rss>

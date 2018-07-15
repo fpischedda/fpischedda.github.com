@@ -1,0 +1,4 @@
+Sitemap: https://francesco.pischedda.info/sitemapindex.xml
+
+User-Agent: *
+Host: francesco.pischedda.info

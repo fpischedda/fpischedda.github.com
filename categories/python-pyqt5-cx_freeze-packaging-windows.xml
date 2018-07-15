@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>@FPSD (Posts about python pyqt5 cx_freeze packaging windows)</title><link>https://francesco.pischedda.info/</link><description></description><atom:link href="https://francesco.pischedda.info/categories/python-pyqt5-cx_freeze-packaging-windows.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 15 Jul 2018 09:53:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>PyQT5 and cx_Freeze Windows™ target tips</title><link>https://francesco.pischedda.info/posts/pyqt5-and-cx_freeze-windowstm-target-tips/</link><dc:creator>Francesco "fpsd" Pischedda</dc:creator><description>&lt;div&gt;&lt;p&gt;One of my preferred benefits of &lt;a class="reference external" href="http://www.python.org"&gt;Python&lt;/a&gt; is its portability and if coupled
+with good libraries such as &lt;a class="reference external" href="http://pyqt.sourceforge.net/Docs/PyQt5/index.html"&gt;PyQT5&lt;/a&gt; the possibilities are endless.&lt;/p&gt;
+&lt;p&gt;Now imagine you created a new shiny desktop application and you want to
+distribute it, how can you package the app for easy installation?&lt;/p&gt;
+&lt;div class="section" id="say-hello-to-cx-freeze"&gt;
+&lt;h2&gt;Say hello to &lt;a class="reference external" href="http://cx-freeze.sourceforge.net"&gt;cx_Freeze&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://cx-freeze.sourceforge.net"&gt;cx_Freeze&lt;/a&gt; is a tool that can create a standalone version of your application
+so you can easily distribute it and the end user don't have to:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;download your source code&lt;/li&gt;
+&lt;li&gt;a python interpreter&lt;/li&gt;
+&lt;li&gt;setup pip or easy_install, libraries and so on&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Another nice feature of &lt;a class="reference external" href="http://cx-freeze.sourceforge.net"&gt;cx_Freeze&lt;/a&gt; is that it can create an installer for many
+different operating systems giving your application a more "professional" look.&lt;/p&gt;
+&lt;p&gt;I strongly suggest giving it a try; using one of the sample setup scripts
+should be enough to get started.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="some-minor-issues"&gt;
+&lt;h2&gt;Some minor issues&lt;/h2&gt;
+&lt;p&gt;A simple application which only depends on pure python packages usually will
+not give you any headaches but if you have dependencies like PyQT5 a bit of
+attention is required.
+In my case not all the required DLL were included in the installer package and
+that generated a strange error message that was very hard to debug but thanks
+to sites like &lt;a class="reference external" href="http://www.stackoverflow.com"&gt;StackOverflow&lt;/a&gt; I've found a nice &lt;a class="reference external" href="http://bit.ly/1kvWVAa"&gt;fix&lt;/a&gt; for it.
+It is worth noting that linked solution is not (always?) enough but there is a
+quick solution (at least in my case): add the file libegl.dll to the
+"include_files" &lt;a class="reference external" href="http://cx-freeze.sourceforge.net"&gt;cx_Freeze&lt;/a&gt; building options.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="how-to-test-your-shiny-new-installer"&gt;
+&lt;h2&gt;How to test your shiny new installer&lt;/h2&gt;
+&lt;p&gt;In order to test your installer and be sure that all the DLLs are incuded and
+your application is not "cheating" on you using system DLLs I suggest to create
+a clean windows installation inside a virtual machine; this way you can test
+your installer in a real case scenario and fix your build scripts accordingly.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>python pyqt5 cx_freeze packaging windows</category><guid>https://francesco.pischedda.info/posts/pyqt5-and-cx_freeze-windowstm-target-tips/</guid><pubDate>Fri, 02 May 2014 11:04:54 GMT</pubDate></item></channel></rss>

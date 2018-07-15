@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>@FPSD (Posts about pyqt python datepicker)</title><link>https://francesco.pischedda.info/</link><description></description><atom:link href="https://francesco.pischedda.info/categories/pyqt-python-datepicker.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 15 Jul 2018 09:53:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Our QT date picker</title><link>https://francesco.pischedda.info/posts/our-qt-date-picker/</link><dc:creator>Francesco "fpsd" Pischedda</dc:creator><description>&lt;div&gt;&lt;p&gt;One of the first works carried out just entering at SysGrove (&lt;a class="reference external" href="http://sysgrove.com"&gt;http://sysgrove.com&lt;/a&gt; )
+consisted in rewriting the date picker component in our application and
+requests regarding this component was that it was similar, at least as a
+feature, to the date picker available in windows 7 ™. The most interesting
+aspect of this component is the ability to be able to do some sort of zoom
+dates, I try to explain with an example:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;It would be a classic date picker where are the days of the current month and
+the ability to change the month with the classic arrows&lt;/li&gt;
+&lt;li&gt;Clicking on the button in the middle of the arrows the days are replaced by
+months and the arrows will change the current year&lt;/li&gt;
+&lt;li&gt;Again by clicking on the button in the middle of the arrows months will be
+replaced by the years and the arrows will change the decade&lt;/li&gt;
+&lt;li&gt;Selecting a year will return a month view and by selecting a month will
+return a day view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some images could help to understand the behaviour:&lt;/p&gt;
+&lt;div class="figure"&gt;
+&lt;img alt="day selector" src="https://francesco.pischedda.info/images/qt-calendar/date-picker-day.png"&gt;
+&lt;p class="caption"&gt;The day selector, with month changer arrows; if you click the middle button
+you'll see the month selector.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="figure"&gt;
+&lt;img alt="/images/qt-calendar/date-picker-month.png" src="https://francesco.pischedda.info/images/qt-calendar/date-picker-month.png"&gt;
+&lt;p class="caption"&gt;The month selector, if you click on the middle button you'll see the year
+selector.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="figure"&gt;
+&lt;img alt="/images/qt-calendar/date-picker-year.png" src="https://francesco.pischedda.info/images/qt-calendar/date-picker-year.png"&gt;
+&lt;p class="caption"&gt;The selector selector.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Fortunately SysGrove is a company that believes strongly in open source and
+sharing so I got permission to release this as open source project component,
+nice! :)&lt;/p&gt;
+&lt;p&gt;At present the appearance of the component is not that great and you have to
+put hand to customize the code of the component , in the future I hope to be
+able to allow the customization of the graphical component directly in the
+process of creating an instance rather than in its base code.&lt;/p&gt;
+&lt;p&gt;The source of this component for the moment can be found in the main repository
+of our application ( &lt;a class="reference external" href="https://bitbucket.org/sysgrove/sysgrove"&gt;https://bitbucket.org/sysgrove/sysgrove&lt;/a&gt; ) path sysgrove /
+ui / classes / widgets / calendar.py&lt;/p&gt;&lt;/div&gt;</description><category>pyqt python datepicker</category><guid>https://francesco.pischedda.info/posts/our-qt-date-picker/</guid><pubDate>Tue, 10 Dec 2013 20:52:42 GMT</pubDate></item></channel></rss>
